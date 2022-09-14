@@ -30,6 +30,12 @@ public class WordCount {
         DataSet<Tuple2<String, Integer>> tokenized = filteredWords.map(new Tokenizer());
         DataSet<Tuple2<String, Integer>> counts = tokenized.groupBy(new int[]{0})
                 .sum(1);
+        if(parameters.has("filter")) {
+            filteredWords.writeAsText(parameters.get("filter"));
+        }
+        if(parameters.has("token")) {
+            tokenized.writeAsCsv(parameters.get("token"), "\n", " ");
+        }
         if(parameters.has("output")) {
             counts.writeAsCsv(parameters.get("output"), "\n", " ");
         }

@@ -3,6 +3,7 @@ package com.base.wordcount;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.api.java.operators.UnsortedGrouping;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.slf4j.Logger;
@@ -28,8 +29,9 @@ public class WordCount {
         log.info("Text file read and stored for further processing.");
         DataSet<String> filteredWords = words.filter((FilterFunction<String>) text -> text.startsWith("N"));
         DataSet<Tuple2<String, Integer>> tokenized = filteredWords.map(new Tokenizer());
-        DataSet<Tuple2<String, Integer>> counts = tokenized.groupBy(new int[]{0})
-                .sum(1);
+        // DataSet<Tuple2<String, Integer>> counts = tokenized.groupBy(new int[]{0}).sum(1);
+        UnsortedGrouping<Tuple2<String, Integer>> group = tokenized.groupBy(0);
+        DataSet<Tuple2<String, Integer>> counts = group.sum(1);
         if(parameters.has("filter")) {
             filteredWords.writeAsText(parameters.get("filter"));
         }

@@ -39,7 +39,7 @@ public class TotalSalesReduce {
         DataStream<Tuple2<String, Double>> profitPerMonth = reducedData.map(new GetProfitMapper());
 
         // splitting reduced data as per odd and even profit
-        final OutputTag<String> evenStringOutput = new OutputTag<>("even-output-profit"){};
+        /*final OutputTag<String> evenStringOutput = new OutputTag<>("even-output-profit"){};
         final OutputTag<Integer> oddIntegerOutput = new OutputTag<>("odd-integer-profit"){};
 
         SingleOutputStreamOperator<Integer> mainStream = reducedData
@@ -56,10 +56,10 @@ public class TotalSalesReduce {
                             context.output(oddIntegerOutput, intVal);
                         }
                     }
-                });
+                });*/
 
-        DataStream<String> evenSideOutput = mainStream.getSideOutput(evenStringOutput);
-        DataStream<Integer> oddSideOutput = mainStream.getSideOutput(oddIntegerOutput);
+        /*DataStream<String> evenSideOutput = mainStream.getSideOutput(evenStringOutput);
+        DataStream<Integer> oddSideOutput = mainStream.getSideOutput(oddIntegerOutput);*/
 
         splitData.writeAsCsv(
                 parameters.get("flink.splitter"),
@@ -79,8 +79,8 @@ public class TotalSalesReduce {
                 "\n",
                 " "
         );
-        evenSideOutput.writeAsText(parameters.get("flink.even.output"));
-        oddSideOutput.writeAsText(parameters.get("flink.odd.output"));
+        /*evenSideOutput.writeAsText(parameters.get("flink.even.output"));
+        oddSideOutput.writeAsText(parameters.get("flink.odd.output"));*/
 
         environment.execute("Total Sales Reducer");
     }
